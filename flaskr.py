@@ -21,7 +21,7 @@ app.config.update(dict(
 
 
 # app.config.from_envvar('flaskr_SETTINGS', silent=True)
-def connect_db():                                       #いまいちわかっていない
+def connect_db():                                       
     """Connects to the specific database."""            #connect to the specific database.
     rv = sqlite3.connect(app.config['DATABASE'])
     rv.row_factory = sqlite3.Row
@@ -55,7 +55,7 @@ def get_db():                                           # to get the current dat
 #         with app.open_resource('schema.sql') as f:
 #             db.cursor().executescript(f.read())
 #         db.commit()
-def init_db():                                       #これ使うと初期化ができるってことしかわかってない
+def init_db():                                       
     with app.app_context():                 #now you can use get_db()
         db = get_db()
         with app.open_resource('schema.sql', mode='r') as f:
