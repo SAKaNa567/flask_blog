@@ -36,39 +36,35 @@ def get_db():                                           # to get the current dat
     if not hasattr(g, 'sqlite_db'):
         g.sqlite_db = connect_db()
     return g.sqlite_db
-# @app.teardown_appcontext　　#実験的に決してみた　問題ありませんでした
-# def close_db(error):
-#     """Closes the database again at the end of the request."""
-#     if hasattr(g, 'sqlite_db'):
-#         g.sqlite_db.close()
+@app.teardown_appcontext　
+def close_db(error):
+    """Closes the database again at the end of the request."""
+    if hasattr(g, 'sqlite_db'):
+        g.sqlite_db.close()
 
 
 
 
-# def init_db():
-#     db = get_db()
-#     with app.open_resource('schema.sql', mode='r') as f:
-#         db.cursor().executescript(f.read())
-#     db.commit()
-# def init_db():
-#     with closing(connect_db()) as db:
-#         with app.open_resource('schema.sql') as f:
-#             db.cursor().executescript(f.read())
-#         db.commit()
+
+def init_db():
+    with closing(connect_db()) as db:
+        with app.open_resource('schema.sql') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
+        
 def init_db():                                       
-    with app.app_context():                 #now you can use get_db()
+    with app.app_context():               
         db = get_db()
         with app.open_resource('schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
 
 
-# こちらも実験的に決してみました。
-# @app.cli.command('initdb')
-# def initdb_command():
-#     """Initializes the database."""
-#     init_db()
-#     print('Initialized the database.')
+@app.cli.command('initdb')
+def initdb_command():
+    """Initializes the database."""
+    init_db()
+    print('Initialized the database.')
 
 
 
